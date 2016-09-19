@@ -32,8 +32,8 @@ import javax.servlet.ServletContextEvent;
  */
 public class Config {
 	//You should change this name to avoid confusion with other sample rooms registered with Game On.
-    private final String name = "AnotherSimpleRoom";
-    private final String fullName = "A Very Simple Room.";
+    private final String name = "An IoT room";
+    private final String fullName = "A Simple Room with IoT Capabilities.";
     private final String description = "You are in the worlds most simple room, there is nothing to do here.";
 	
     //default registration is with the live site, although this can be changed via environment variables

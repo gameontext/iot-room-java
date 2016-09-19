@@ -47,6 +47,8 @@ import javax.websocket.RemoteEndpoint.Basic;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import com.ibm.iotf.client.device.DeviceClient;
+
 import org.gameontext.util.reg.RegistrationUtility;
 import org.gameontext.util.reg.RegistrationUtility.HTTP_METHOD;
 
@@ -85,6 +87,7 @@ public class Application implements ServletContextListener {
 
     private final Set<Session> sessions = new CopyOnWriteArraySet<Session>();
 
+    private DeviceClient iotClient = null;
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Room registration
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -122,12 +125,36 @@ public class Application implements ServletContextListener {
     	} else {
     		System.out.println("Not registering as no valid config is available");
     	}
+        configureIoT();
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         // Here we could deregister, if we wanted.. we'd need to read the registration/query
         // response to cache the room id, so we could remove it as we shut down.
+    }
+
+    private void configureIoT() {
+	/**
+	  * Load device properties
+	  */
+	props = new Properties();
+        props.setProperty("id","gameon-room");
+        props.setProperty("org", "umont0");
+        props.setProperty("auth-method", "apikey");
+        props.setProperty("auth-key", "a-umont0-dsqbaspq1j");
+        props.setProperty("auth-token", "0xzn4T-ZFpD1gMl*bT");
+        props.setProperty("shared-subscription", "false");
+        props.setProperty("clean-session", "true");
+		
+	try {
+           iotClient = new DeviceClient(options);
+      	   iotClient.connect();
+  	} catch (Exception e) {
+  	   e.printStackTrace();
+	   System.exit(-1);
+        }
+        System.out.println("Client connected:" + iotClient);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -226,6 +253,30 @@ public class Application implements ServletContextListener {
         String lowerContent = content.toLowerCase();
 
         System.out.println("Command received from the user, " + content);
+        
+        if (lowerContent.equals("/switch")) {
+            // Indicate if the light is on or off
+            light = !light;
+
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add(TYPE, LOCATION);
+            response.add(NAME, config.getName());
+            response.add(DESCRIPTION, "You switch the light " + lightStatus );
+
+            sendRemoteTextMessage(session, "player," + userid + "," + response.build().toString());
+
+
+            System.out.println("Building IoT JSON Object");
+	    com.google.gson.JsonObject data = new com.google.gson.JsonObject();
+	    
+            data.addProperty("pin", "1");  
+            data.addProperty("state", light);
+            System.out.println("Sending IoT message; AppClient="+iotClient);
+            
+            iotClient.publishEvent("update", data);
+            System.out.println("Done processing switch");
+            return; 
+        }
 
         // handle look command
         if (lowerContent.equals("/look")) {
