@@ -83,9 +83,15 @@ public class Application implements ServletContextListener {
 
 
     // IoT variables
-    private static final String PLAYER_ID = "ldesrosi";
-    private static final String ROOM_NAME = "ldesrosi";
-    private static final String SITE_ID = "ldesrosi";
+    // Once you set up your room in the GameOn Edit Rooms panel,
+    // you should be able to find these variables there.
+    private static final String PLAYER_ID = "google:105084429722850913278";
+    private static final String ROOM_NAME = "IoTRoom";
+    private static final String SITE_ID = "c8771a19974afa9744495ad611af657f";
+    private DeviceRegistrationResponse iotResponse = null;
+    
+    
+    // ALl rooms should have a device type of GameOnRoom
     private static final String DEVICE_TYPE = "GameOnRoom";
     
     
@@ -99,7 +105,7 @@ public class Application implements ServletContextListener {
 
     private final Set<Session> sessions = new CopyOnWriteArraySet<Session>();
 
-    private DeviceClient iotClient = null;
+    private static volatile DeviceClient iotClient = null;
     private boolean light = false;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,35 +116,6 @@ public class Application implements ServletContextListener {
      */
     @Override
     public final void contextInitialized(final ServletContextEvent e) {
-    	//setup the registration with the config retrieved from the environment
-    	if (config.isValid()) {
-	        RegistrationUtility regutil = new RegistrationUtility();
-	        regutil.setId(config.getUserId());
-	        regutil.setSecret(config.getKey());
-	        regutil.setUrl(config.getRegistrationUrl());
-	        
-	        // attempt to regsiter this room
-	        regutil.setMethod(HTTP_METHOD.POST);
-	        regutil.setBody(config.getRoomJSON(e));
-	        try {
-		        switch(regutil.register()) {
-		        	case HttpServletResponse.SC_CONFLICT :
-		        		System.out.println("This room is already registered, so there is no need to re-register");
-		        		break;
-		        	case HttpServletResponse.SC_CREATED :
-		        		System.out.println("Room registered successfully.");
-		        		break;
-		        	default:
-		        		System.out.println("Failed to register room, see logs for more details");
-		        		break;
-		        }
-	        } catch (Exception ex) {
-	        	ex.printStackTrace();
-	            throw new RuntimeException(ex);
-	        }
-    	} else {
-    		System.out.println("Not registering as no valid config is available");
-    	}
         configureIoT();
     }
 
@@ -158,19 +135,17 @@ public class Application implements ServletContextListener {
         request.setDeviceType(DEVICE_TYPE);
 
         DeviceRegistration registration = new DeviceRegistration();
-        DeviceRegistrationResponse response = registration.registerDevice(request);
+        iotResponse = registration.registerDevice(request);
 
 	/**
 	  * Load device properties
 	  */
 	Properties props = new Properties();
-        props.setProperty("id","gameon-room");
-        props.setProperty("org", "umont0");
-        props.setProperty("auth-method", "apikey");
-        props.setProperty("auth-key", "a-umont0-dsqbaspq1j");
-        props.setProperty("auth-token", "0xzn4T-ZFpD1gMl*bT");
-        props.setProperty("shared-subscription", "false");
-        props.setProperty("clean-session", "true");
+        props.setProperty("id",iotResponse.getDeviceId());
+        props.setProperty("org", "jdy152");
+        props.setProperty("type", DEVICE_TYPE);
+        props.setProperty("auth-method", "token");
+        props.setProperty("auth-token", iotResponse.getDeviceAuthToken());
 		
 	try {
            iotClient = new DeviceClient(props);
@@ -282,7 +257,7 @@ public class Application implements ServletContextListener {
         if (lowerContent.equals("/switch")) {
             // Indicate if the light is on or off
             light = !light;
-
+            
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add(TYPE, LOCATION);
             response.add(NAME, config.getName());
@@ -292,13 +267,19 @@ public class Application implements ServletContextListener {
 
 
             System.out.println("Building IoT JSON Object");
-	    com.google.gson.JsonObject data = new com.google.gson.JsonObject();
-	    
-            data.addProperty("pin", "1");  
-            data.addProperty("state", light);
+            IoTPayload payload = new IoTPayload();
+            payload.setPlayerId(PLAYER_ID);
+            payload.setRoomName(ROOM_NAME);
+            payload.setSiteId(SITE_ID);
+            Data data = new Data();
+            data.setLightAddress("pi1:1");
+            data.setLightState(light);
+            payload.setData(data);
+
+            
             System.out.println("Sending IoT message; AppClient="+iotClient);
             
-            iotClient.publishEvent("update", data);
+            iotClient.publishEvent("request", payload);
             System.out.println("Done processing switch");
             return; 
         }

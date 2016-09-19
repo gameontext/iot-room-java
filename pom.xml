@@ -27,8 +27,8 @@
         <warContext></warContext>
 
         <!-- Cloud Foundry/Bluemix properties -->
-        <cf.context>eu-gb.mybluemix.net</cf.context>
-        <cf.target>https://api.eu-gb.bluemix.net</cf.target>
+        <cf.context>mybluemix.net</cf.context>
+        <cf.target>https://api.ng.bluemix.net</cf.target>
         <cf.space>dev</cf.space>
         <cf.context.root>${app.name}.${cf.context}/${warContext}</cf.context.root>
 
@@ -39,7 +39,7 @@
         <!-- <cf.password></cf.password> -->
 
         <!-- This is the host for your app in Bluemix and what it will be called in the dashboard. -->
-        <app.name>gameon-room-java</app.name>
+        <app.name>iot-room-java</app.name>
     </properties>
 
     <repositories>
