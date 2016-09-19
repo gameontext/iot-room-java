@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.Properties;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -51,6 +52,9 @@ import com.ibm.iotf.client.device.DeviceClient;
 
 import org.gameontext.util.reg.RegistrationUtility;
 import org.gameontext.util.reg.RegistrationUtility.HTTP_METHOD;
+import org.gameontext.iotboard.registration.DeviceRegistration;
+import org.gameontext.iotboard.registration.DeviceRegistrationRequest;
+import org.gameontext.iotboard.registration.DeviceRegistrationResponse;
 
 /**
  * A very simple room.
@@ -76,6 +80,14 @@ public class Application implements ServletContextListener {
     private final static String EXIT_ID = "exitId";
     private final static String FULLNAME = "fullName";
     private final static String DESCRIPTION = "description";
+
+
+    // IoT variables
+    private static final String PLAYER_ID = "ldesrosi";
+    private static final String ROOM_NAME = "ldesrosi";
+    private static final String SITE_ID = "ldesrosi";
+    private static final String DEVICE_TYPE = "GameOnRoom";
+    
     
     private Config config = new Config();
     
@@ -88,6 +100,8 @@ public class Application implements ServletContextListener {
     private final Set<Session> sessions = new CopyOnWriteArraySet<Session>();
 
     private DeviceClient iotClient = null;
+    private boolean light = false;
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Room registration
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -135,10 +149,21 @@ public class Application implements ServletContextListener {
     }
 
     private void configureIoT() {
+
+
+        DeviceRegistrationRequest request = new DeviceRegistrationRequest();
+        request.setPlayerId(PLAYER_ID);
+        request.setRoomName(ROOM_NAME);
+        request.setSiteId(SITE_ID);
+        request.setDeviceType(DEVICE_TYPE);
+
+        DeviceRegistration registration = new DeviceRegistration();
+        DeviceRegistrationResponse response = registration.registerDevice(request);
+
 	/**
 	  * Load device properties
 	  */
-	props = new Properties();
+	Properties props = new Properties();
         props.setProperty("id","gameon-room");
         props.setProperty("org", "umont0");
         props.setProperty("auth-method", "apikey");
@@ -148,7 +173,7 @@ public class Application implements ServletContextListener {
         props.setProperty("clean-session", "true");
 		
 	try {
-           iotClient = new DeviceClient(options);
+           iotClient = new DeviceClient(props);
       	   iotClient.connect();
   	} catch (Exception e) {
   	   e.printStackTrace();
@@ -261,7 +286,7 @@ public class Application implements ServletContextListener {
             JsonObjectBuilder response = Json.createObjectBuilder();
             response.add(TYPE, LOCATION);
             response.add(NAME, config.getName());
-            response.add(DESCRIPTION, "You switch the light " + lightStatus );
+            response.add(DESCRIPTION, "You switch the light " + light );
 
             sendRemoteTextMessage(session, "player," + userid + "," + response.build().toString());
 

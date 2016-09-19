@@ -33,12 +33,22 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-	<dependencies>
-	    <dependency>
+    <dependencies>
+	<dependency>
+	    <groupId>com.github.gameontext</groupId>
+	    <artifactId>iotreg</artifactId>
+	    <version>v0.0.2</version>
+	</dependency>
+        <dependency>
       	    <groupId>com.github.gameontext</groupId>
       	    <artifactId>regutil</artifactId>
       	    <version>v2.0.1</version>
       	</dependency>
+    	<dependency>
+   	  <groupId>com.ibm.messaging</groupId>
+	  <artifactId>watson-iot</artifactId>
+  	  <version>0.1.0</version>
+	</dependency>
     </dependencies>
 
     <build>
