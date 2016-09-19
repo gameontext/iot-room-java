@@ -44,16 +44,6 @@ Sign up for Bluemix at https://console.ng.bluemix.net and DevOps Services at htt
 * Make a note of your username and org, as you will need both later.
   * By default, the space is dev and the org is the project creator's user name. For example, if sara@example.com signs in to Bluemix for the first time, the active space is dev and the org is sara@example.com.
 
-## Get Game On! ID and Shared Secret
-
-For a new room to register with the Game-On application, you must first log in to game-on.org and sign in using one of several methods to get your **Game On! ID** and **Shared Secret**.
-
-1.  Go to [https://game-on.org/](https://game-on.org/) and click **Enter**.
-2.  Select an authentication method to log in with your username and password for that type.
-3.  If you've never played before, you'll need to choose a display name and favorite color, and click **Done**
-3.  Once you are in First Room, view your user profile using the link in the top right. It is either your username or a person icon.
-4.  You should now see your **Game On! ID** and **Shared Secret** near the middle of the page.
-
 ## Registering your room
 
 Microservices in production should support automatic scaling, with multiple instances of the room microservice running in parallel, with new instances starting or existing instances stopping at unpredictable times.  As a result of this, the room does not programmatically register itself by default. You can force it to do so by specifying the GAMEON_ID and GAMEON_SECRET environment variables.
@@ -67,9 +57,18 @@ The preferred way to register a room is via the Edit Rooms dialog in GameOn (not
 5.  Fill in the room information as specified. If you don't know all the details yet, such as endpoint, leave those blank and come back and fill them in later.
 6.  Click **Create** and the room will be created for you.
 
+## Setting the Game On IoT values
+
+This application requires some IoT variables to be set in your copy. Update these in the [Application.java](gojava-application/src/main/java/application/Application.java) class.
+
+The variables to update are:
+
+1. The **PLAYER_ID**  variable should be set to your player ID. You can find this from you profile page at (https://game-on.org).
+2. The **SITE_ID** and **ROOM_NAME** should be set from the previous instructions.
+
 ## Getting the source code
 
-The source code is located in GitHub, navigate to our [repository](https://github.com/gameontext/gameon-room-java.git) and download the ZIP file and unzip the code on to your local machine. Alternatively you can use the GitHub CLI to clone the repository with `git clone https://github.com/gameontext/gameon-room-java.git`.
+The source code is located in GitHub, navigate to our [repository](https://github.com/gameontext/iot-room-java.git) and download the ZIP file and unzip the code on to your local machine. Alternatively you can use the GitHub CLI to clone the repository with `git clone https://github.com/gameontext/gameon-room-java.git`.
 
 ## Build and deploy
 
