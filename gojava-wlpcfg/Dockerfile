@@ -3,7 +3,7 @@ MAINTAINER Erin Schnabel @ebullientworks
 
 ENV LIBERTY_MODE run
 
-#Set your Game On! ID and secret (you can find this information here : https://game-on.org/#/play/me) 
+#Set your Game On! ID and secret (you can find this information here : https://gameontext.org/#/play/me) 
 #<id e.g. google:12345678>
 ENV GAMEON_ID changeme
 #<your shared secret>
