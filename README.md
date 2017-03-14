@@ -10,12 +10,12 @@ For more information: http://bit.ly/gameonjone2016
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4d099084aab34a57893e8fd29df79ae3)](https://www.codacy.com/app/gameontext/gameon-room-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=gameontext/gameon-room-java&amp;utm_campaign=Badge_Grade)
 
-[Game On!](https://game-on.org/) is both a sample microservices application, and a throwback text adventure brought to you by the WASdev team at IBM. This application demonstrates how microservice architectures work from two points of view:
+[Game On!](https://gameontext.org/) is both a sample microservices application, and a throwback text adventure brought to you by the WASdev team at IBM. This application demonstrates how microservice architectures work from two points of view:
 
 1. As a Player: navigate through a network/maze of rooms. Each room is an autonomous service, supports chat, and may provide interaction with items (some of which may be in the room, some of which might be separately defined services as well).
 2. As a Developer: learn about microservice architectures and their supporting infrastructure by creating your own microservices to extend the game.
 
-You can learn more about Game On! at [http://game-on.org/](http://game-on.org/).
+You can learn more about Game On! at [http://gameontext.org/](http://gameontext.org/).
 
 ## Introduction
 
@@ -48,9 +48,9 @@ Sign up for Bluemix at https://console.ng.bluemix.net and DevOps Services at htt
 
 Microservices in production should support automatic scaling, with multiple instances of the room microservice running in parallel, with new instances starting or existing instances stopping at unpredictable times.  As a result of this, the room does not programmatically register itself by default. You can force it to do so by specifying the GAMEON_ID and GAMEON_SECRET environment variables.
 
-The preferred way to register a room is via the Edit Rooms dialog in GameOn (note you can also use the [command line regutil tool](https://github.com/gameontext/regutil) or the [interactive map](https://game-on.org/interactivemap)).
+The preferred way to register a room is via the Edit Rooms dialog in GameOn (note you can also use the [command line regutil tool](https://github.com/gameontext/regutil) or the [interactive map](https://gameontext.org/interactivemap)).
 
-1.  Go to [GameOn](https://game-on.org) and sign in.
+1.  Go to [GameOn](https://gameontext.org) and sign in.
 2.  Once you are signed in, go to the top right of the browser window and click on your username.
 3.  From this windows, again click the top right panel to select **Edit rooms**.
 4.  Under **Select or create a room**, make sure **create a room** is selected from the dropdown.
@@ -63,7 +63,7 @@ This application requires some IoT variables to be set in your copy. Update thes
 
 The variables to update are:
 
-1. The **PLAYER_ID**  variable should be set to your player ID. You can find this from you profile page at (https://game-on.org).
+1. The **PLAYER_ID**  variable should be set to your player ID. You can find this from you profile page at (https://gameontext.org).
 2. The **SITE_ID** and **ROOM_NAME** should be set from the previous instructions.
 
 ## Getting the source code
@@ -78,7 +78,7 @@ The source code is located in GitHub, navigate to our [repository](https://githu
 2. `mvn install`
   After running this, you will have the server running locally at [http://localhost:9080/](http://localhost:9080/).
   You can use a browser extension to play with the WebSocket according to the
-  [Game On! WebSocket protocol](https://book.game-on.org/microservices/WebSocketProtocol.html).
+  [Game On! WebSocket protocol](https://book.gameontext.org/microservices/WebSocketProtocol.html).
 
   Use `mvn clean -P stopServer` to stop the server.
 
@@ -195,9 +195,9 @@ Instead of deploying a container as a single instance, you can instead deploy a 
 
 ## Access room on Game On!
 
-Once the room is set up and it has registered with Game On!, it will be accessible on [Game On!](https://game-on.org/). It may take a moment for the room to appear.
+Once the room is set up and it has registered with Game On!, it will be accessible on [Game On!](https://gameontext.org/). It may take a moment for the room to appear.
 
-1. Log in to [Game On!](https://game-on.org/) using the authentication method you used to create your user ID and shared secret for the registered room.
+1. Log in to [Game On!](https://gameontext.org/) using the authentication method you used to create your user ID and shared secret for the registered room.
 2. Use the Game On! command `/listmyrooms` from The First Room, to see your list of rooms. Once your room is registered, it will appear in that list.
 3. To get to your room, navigate through the network or go directly there by using the `/teleport` command from The First Room.
 4. Look at the Bluemix log console to see "A new connection has been made to the room"
