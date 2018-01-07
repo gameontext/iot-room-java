@@ -37,7 +37,7 @@ public class Config {
     private final String description = "You are in the worlds most simple room, there is nothing to do here.";
 	
     //default registration is with the live site, although this can be changed via environment variables
-    private String registrationUrl = "https://game-on.org/map/v1/sites";
+    private String registrationUrl = "https://gameontext.org/map/v1/sites";
     private String endPointUrl;
     private String userId;
     private String key;
